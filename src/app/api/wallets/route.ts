@@ -1,14 +1,29 @@
 import { NextResponse } from 'next/server';
-import { verifyAuth } from '@/lib/auth-middleware';
+import { cookies } from 'next/headers';
 import prisma from '@/lib/prisma';
 
 export async function GET(request: Request) {
   try {
-    const authResult = await verifyAuth(request);
+    // Get auth token from cookies
+    const cookieStore = await cookies();
+    const token = cookieStore.get('auth_token')?.value;
 
-    if (!authResult.authenticated || !authResult.user) {
+    if (!token) {
       return NextResponse.json(
         { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    // Verify session and get user
+    const session = await prisma.session.findUnique({
+      where: { token },
+      include: { user: true }
+    });
+
+    if (!session || new Date(session.expiresAt) < new Date()) {
+      return NextResponse.json(
+        { error: 'Session expired' },
         { status: 401 }
       );
     }
@@ -16,7 +31,7 @@ export async function GET(request: Request) {
     // Fetch user's wallets
     const wallets = await prisma.wallet.findMany({
       where: {
-        userId: authResult.user.id,
+        userId: session.user.id,
       },
       select: {
         asset: true,
