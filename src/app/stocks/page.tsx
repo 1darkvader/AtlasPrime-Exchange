@@ -141,6 +141,28 @@ const STOCK_PAIRS: TokenizedStock[] = [
   { symbol: "ZIL/USDT", binanceSymbol: "ZILUSDT", company: "Zilliqa", sector: "Layer 1" },
   { symbol: "ONE/USDT", binanceSymbol: "ONEUSDT", company: "Harmony", sector: "Layer 1" },
   { symbol: "CELO/USDT", binanceSymbol: "CELOUSDT", company: "Celo", sector: "Payments" },
+
+  // FX Trading - Major Currency Pairs (via stablecoins and BTC pairs)
+  { symbol: "EUR/USDT", binanceSymbol: "EURUSDT", company: "Euro Tether", sector: "Forex" },
+  { symbol: "GBP/USDT", binanceSymbol: "GBPUSDT", company: "British Pound", sector: "Forex" },
+  { symbol: "AUD/USDT", binanceSymbol: "AUDUSDT", company: "Australian Dollar", sector: "Forex" },
+  { symbol: "BRL/USDT", binanceSymbol: "BRLUSDT", company: "Brazilian Real", sector: "Forex" },
+  { symbol: "TRY/USDT", binanceSymbol: "TRYUSDT", company: "Turkish Lira", sector: "Forex" },
+  { symbol: "RUB/USDT", binanceSymbol: "RUBUSDT", company: "Russian Ruble", sector: "Forex" },
+  { symbol: "ZAR/USDT", binanceSymbol: "ZARUSDT", company: "South African Rand", sector: "Forex" },
+  { symbol: "UAH/USDT", binanceSymbol: "UAHUSDT", company: "Ukrainian Hryvnia", sector: "Forex" },
+  { symbol: "NGN/USDT", binanceSymbol: "NGNUSDT", company: "Nigerian Naira", sector: "Forex" },
+  { symbol: "ARS/USDT", binanceSymbol: "ARSUSDT", company: "Argentine Peso", sector: "Forex" },
+  { symbol: "PLN/USDT", binanceSymbol: "PLNUSDT", company: "Polish Zloty", sector: "Forex" },
+  { symbol: "RON/USDT", binanceSymbol: "RONUSDT", company: "Romanian Leu", sector: "Forex" },
+  { symbol: "BTC/EUR", binanceSymbol: "BTCEUR", company: "Bitcoin/Euro", sector: "Forex Crypto" },
+  { symbol: "ETH/EUR", binanceSymbol: "ETHEUR", company: "Ethereum/Euro", sector: "Forex Crypto" },
+  { symbol: "BTC/GBP", binanceSymbol: "BTCGBP", company: "Bitcoin/Pound", sector: "Forex Crypto" },
+  { symbol: "ETH/GBP", binanceSymbol: "ETHGBP", company: "Ethereum/Pound", sector: "Forex Crypto" },
+  { symbol: "BTC/AUD", binanceSymbol: "BTCAUD", company: "Bitcoin/AUD", sector: "Forex Crypto" },
+  { symbol: "BTC/BRL", binanceSymbol: "BTCBRL", company: "Bitcoin/Real", sector: "Forex Crypto" },
+  { symbol: "BTC/TRY", binanceSymbol: "BTCTRY", company: "Bitcoin/Lira", sector: "Forex Crypto" },
+  { symbol: "ETH/TRY", binanceSymbol: "ETHTRY", company: "Ethereum/Lira", sector: "Forex Crypto" },
 ];
 
 export default function StocksPage() {

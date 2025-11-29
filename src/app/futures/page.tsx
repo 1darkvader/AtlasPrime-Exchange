@@ -66,6 +66,10 @@ export default function FuturesPage() {
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [pendingOrder, setPendingOrder] = useState<CreateOrderParams | null>(null);
 
+  // Wallet state - fetch real data
+  const [walletBalances, setWalletBalances] = useState<any>(null);
+  const [loadingWallet, setLoadingWallet] = useState(true);
+
   const { candleData, tickerData, loading } = useCryptoData(binanceSymbol, timeframe);
   const { orderBook, recentTrades, connected, reconnecting, error } = useWebSocket(binanceSymbol);
 
@@ -78,11 +82,42 @@ export default function FuturesPage() {
   };
 
   const maxLeverage = 125;
+
+  // Fetch wallet balances
+  useEffect(() => {
+    const fetchWalletBalances = async () => {
+      if (!isAuthenticated) {
+        setLoadingWallet(false);
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/wallets');
+        if (response.ok) {
+          const data = await response.json();
+          setWalletBalances(data);
+        }
+      } catch (error) {
+        console.error('Error fetching wallet:', error);
+      } finally {
+        setLoadingWallet(false);
+      }
+    };
+
+    fetchWalletBalances();
+  }, [isAuthenticated]);
+
+  // Calculate account stats from wallet
   const accountStats = {
-    totalWalletBalance: 50000,
-    availableBalance: 38500,
-    positionsMargin: 11500,
-    marginRatio: 23.5,
+    totalWalletBalance: walletBalances?.wallets?.reduce((sum: number, w: any) => {
+      // Convert to USDT value (simplified - in production you'd use real prices)
+      if (w.asset === 'USDT') return sum + parseFloat(w.balance);
+      if (w.asset === 'BTC') return sum + (parseFloat(w.balance) * (tickerData?.price || 90000));
+      return sum;
+    }, 0) || 0,
+    availableBalance: walletBalances?.wallets?.find((w: any) => w.asset === 'USDT')?.balance || 0,
+    positionsMargin: 0, // Would be calculated from open positions
+    marginRatio: 0,
   };
 
   useEffect(() => {
@@ -744,7 +779,9 @@ export default function FuturesPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Unrealized PNL:</span>
-                    <span className="text-emerald-400 font-semibold">+932.90 USDT</span>
+                    <span className={`font-semibold ${openPositions.length > 0 ? 'text-emerald-400' : 'text-muted-foreground'}`}>
+                      {openPositions.length > 0 ? '+' : ''}0.00 USDT
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Margin Balance:</span>
