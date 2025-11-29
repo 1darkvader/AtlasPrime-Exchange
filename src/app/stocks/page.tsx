@@ -26,31 +26,147 @@ interface TokenizedStock {
   sector: string;
 }
 
+// 100+ popular trading pairs available on Binance
+const STOCK_PAIRS: TokenizedStock[] = [
+  // Major Crypto (Tech Sector)
+  { symbol: "BTC/USDT", binanceSymbol: "BTCUSDT", company: "Bitcoin", sector: "Cryptocurrency" },
+  { symbol: "ETH/USDT", binanceSymbol: "ETHUSDT", company: "Ethereum", sector: "Cryptocurrency" },
+  { symbol: "BNB/USDT", binanceSymbol: "BNBUSDT", company: "Binance Coin", sector: "Exchange" },
+  { symbol: "SOL/USDT", binanceSymbol: "SOLUSDT", company: "Solana", sector: "Layer 1" },
+  { symbol: "XRP/USDT", binanceSymbol: "XRPUSDT", company: "Ripple", sector: "Payments" },
+  { symbol: "ADA/USDT", binanceSymbol: "ADAUSDT", company: "Cardano", sector: "Layer 1" },
+  { symbol: "AVAX/USDT", binanceSymbol: "AVAXUSDT", company: "Avalanche", sector: "Layer 1" },
+  { symbol: "DOGE/USDT", binanceSymbol: "DOGEUSDT", company: "Dogecoin", sector: "Meme" },
+  { symbol: "DOT/USDT", binanceSymbol: "DOTUSDT", company: "Polkadot", sector: "Layer 0" },
+  { symbol: "MATIC/USDT", binanceSymbol: "MATICUSDT", company: "Polygon", sector: "Layer 2" },
+
+  // DeFi Tokens
+  { symbol: "LINK/USDT", binanceSymbol: "LINKUSDT", company: "Chainlink", sector: "Oracle" },
+  { symbol: "UNI/USDT", binanceSymbol: "UNIUSDT", company: "Uniswap", sector: "DeFi" },
+  { symbol: "AAVE/USDT", binanceSymbol: "AAVEUSDT", company: "Aave", sector: "DeFi" },
+  { symbol: "MKR/USDT", binanceSymbol: "MKRUSDT", company: "Maker", sector: "DeFi" },
+  { symbol: "COMP/USDT", binanceSymbol: "COMPUSDT", company: "Compound", sector: "DeFi" },
+  { symbol: "CRV/USDT", binanceSymbol: "CRVUSDT", company: "Curve", sector: "DeFi" },
+  { symbol: "SUSHI/USDT", binanceSymbol: "SUSHIUSDT", company: "SushiSwap", sector: "DeFi" },
+  { symbol: "SNX/USDT", binanceSymbol: "SNXUSDT", company: "Synthetix", sector: "DeFi" },
+  { symbol: "YFI/USDT", binanceSymbol: "YFIUSDT", company: "Yearn Finance", sector: "DeFi" },
+  { symbol: "1INCH/USDT", binanceSymbol: "1INCHUSDT", company: "1inch", sector: "DeFi" },
+
+  // Layer 1 & Layer 2
+  { symbol: "ATOM/USDT", binanceSymbol: "ATOMUSDT", company: "Cosmos", sector: "Layer 0" },
+  { symbol: "FTM/USDT", binanceSymbol: "FTMUSDT", company: "Fantom", sector: "Layer 1" },
+  { symbol: "NEAR/USDT", binanceSymbol: "NEARUSDT", company: "NEAR Protocol", sector: "Layer 1" },
+  { symbol: "ALGO/USDT", binanceSymbol: "ALGOUSDT", company: "Algorand", sector: "Layer 1" },
+  { symbol: "VET/USDT", binanceSymbol: "VETUSDT", company: "VeChain", sector: "Supply Chain" },
+  { symbol: "ICP/USDT", binanceSymbol: "ICPUSDT", company: "Internet Computer", sector: "Layer 1" },
+  { symbol: "FIL/USDT", binanceSymbol: "FILUSDT", company: "Filecoin", sector: "Storage" },
+  { symbol: "EOS/USDT", binanceSymbol: "EOSUSDT", company: "EOS", sector: "Layer 1" },
+  { symbol: "XTZ/USDT", binanceSymbol: "XTZUSDT", company: "Tezos", sector: "Layer 1" },
+  { symbol: "ARB/USDT", binanceSymbol: "ARBUSDT", company: "Arbitrum", sector: "Layer 2" },
+
+  // Meme & Community
+  { symbol: "SHIB/USDT", binanceSymbol: "SHIBUSDT", company: "Shiba Inu", sector: "Meme" },
+  { symbol: "PEPE/USDT", binanceSymbol: "PEPEUSDT", company: "Pepe", sector: "Meme" },
+  { symbol: "FLOKI/USDT", binanceSymbol: "FLOKIUSDT", company: "Floki", sector: "Meme" },
+  { symbol: "BONK/USDT", binanceSymbol: "BONKUSDT", company: "Bonk", sector: "Meme" },
+
+  // Gaming & Metaverse
+  { symbol: "AXS/USDT", binanceSymbol: "AXSUSDT", company: "Axie Infinity", sector: "Gaming" },
+  { symbol: "SAND/USDT", binanceSymbol: "SANDUSDT", company: "The Sandbox", sector: "Metaverse" },
+  { symbol: "MANA/USDT", binanceSymbol: "MANAUSDT", company: "Decentraland", sector: "Metaverse" },
+  { symbol: "GALA/USDT", binanceSymbol: "GALAUSDT", company: "Gala Games", sector: "Gaming" },
+  { symbol: "ENJ/USDT", binanceSymbol: "ENJUSDT", company: "Enjin", sector: "Gaming" },
+  { symbol: "IMX/USDT", binanceSymbol: "IMXUSDT", company: "Immutable X", sector: "Gaming" },
+
+  // AI & Data
+  { symbol: "FET/USDT", binanceSymbol: "FETUSDT", company: "Fetch.ai", sector: "AI" },
+  { symbol: "AGIX/USDT", binanceSymbol: "AGIXUSDT", company: "SingularityNET", sector: "AI" },
+  { symbol: "OCEAN/USDT", binanceSymbol: "OCEANUSDT", company: "Ocean Protocol", sector: "Data" },
+  { symbol: "GRT/USDT", binanceSymbol: "GRTUSDT", company: "The Graph", sector: "Indexing" },
+
+  // Exchange Tokens
+  { symbol: "CRO/USDT", binanceSymbol: "CROUSDT", company: "Crypto.com", sector: "Exchange" },
+  { symbol: "OKB/USDT", binanceSymbol: "OKBUSDT", company: "OKX", sector: "Exchange" },
+  { symbol: "LEO/USDT", binanceSymbol: "LEOUSDT", company: "UNUS SED LEO", sector: "Exchange" },
+
+  // Privacy & Security
+  { symbol: "XMR/USDT", binanceSymbol: "XMRUSDT", company: "Monero", sector: "Privacy" },
+  { symbol: "ZEC/USDT", binanceSymbol: "ZECUSDT", company: "Zcash", sector: "Privacy" },
+
+  // Infrastructure
+  { symbol: "RNDR/USDT", binanceSymbol: "RNDRUSDT", company: "Render", sector: "GPU" },
+  { symbol: "AR/USDT", binanceSymbol: "ARUSDT", company: "Arweave", sector: "Storage" },
+  { symbol: "LDO/USDT", binanceSymbol: "LDOUSDT", company: "Lido DAO", sector: "Staking" },
+  { symbol: "RPL/USDT", binanceSymbol: "RPLUSDT", company: "Rocket Pool", sector: "Staking" },
+
+  // More Popular Pairs
+  { symbol: "LTC/USDT", binanceSymbol: "LTCUSDT", company: "Litecoin", sector: "Payments" },
+  { symbol: "BCH/USDT", binanceSymbol: "BCHUSDT", company: "Bitcoin Cash", sector: "Payments" },
+  { symbol: "TRX/USDT", binanceSymbol: "TRXUSDT", company: "TRON", sector: "Layer 1" },
+  { symbol: "APT/USDT", binanceSymbol: "APTUSDT", company: "Aptos", sector: "Layer 1" },
+  { symbol: "SUI/USDT", binanceSymbol: "SUIUSDT", company: "Sui", sector: "Layer 1" },
+  { symbol: "OP/USDT", binanceSymbol: "OPUSDT", company: "Optimism", sector: "Layer 2" },
+  { symbol: "INJ/USDT", binanceSymbol: "INJUSDT", company: "Injective", sector: "DeFi" },
+  { symbol: "SEI/USDT", binanceSymbol: "SEIUSDT", company: "Sei", sector: "Layer 1" },
+  { symbol: "TIA/USDT", binanceSymbol: "TIAUSDT", company: "Celestia", sector: "Modular" },
+  { symbol: "RUNE/USDT", binanceSymbol: "RUNEUSDT", company: "THORChain", sector: "DeFi" },
+  { symbol: "HBAR/USDT", binanceSymbol: "HBARUSDT", company: "Hedera", sector: "Enterprise" },
+  { symbol: "QNT/USDT", binanceSymbol: "QNTUSDT", company: "Quant", sector: "Interoperability" },
+  { symbol: "STX/USDT", binanceSymbol: "STXUSDT", company: "Stacks", sector: "Bitcoin L2" },
+  { symbol: "KAS/USDT", binanceSymbol: "KASUSDT", company: "Kaspa", sector: "Layer 1" },
+  { symbol: "BEAM/USDT", binanceSymbol: "BEAMUSDT", company: "Beam", sector: "Gaming" },
+  { symbol: "ROSE/USDT", binanceSymbol: "ROSEUSDT", company: "Oasis Network", sector: "Privacy" },
+  { symbol: "CFX/USDT", binanceSymbol: "CFXUSDT", company: "Conflux", sector: "Layer 1" },
+  { symbol: "WLD/USDT", binanceSymbol: "WLDUSDT", company: "Worldcoin", sector: "Identity" },
+  { symbol: "PYTH/USDT", binanceSymbol: "PYTHUSDT", company: "Pyth Network", sector: "Oracle" },
+  { symbol: "JUP/USDT", binanceSymbol: "JUPUSDT", company: "Jupiter", sector: "DeFi" },
+  { symbol: "PENDLE/USDT", binanceSymbol: "PENDLEUSDT", company: "Pendle", sector: "DeFi" },
+  { symbol: "WOO/USDT", binanceSymbol: "WOOUSDT", company: "WOO Network", sector: "DeFi" },
+  { symbol: "BLUR/USDT", binanceSymbol: "BLURUSDT", company: "Blur", sector: "NFT" },
+  { symbol: "MAGIC/USDT", binanceSymbol: "MAGICUSDT", company: "Magic", sector: "Gaming" },
+  { symbol: "GMX/USDT", binanceSymbol: "GMXUSDT", company: "GMX", sector: "DeFi" },
+  { symbol: "DYM/USDT", binanceSymbol: "DYMUSDT", company: "Dymension", sector: "Modular" },
+  { symbol: "STRK/USDT", binanceSymbol: "STRKUSDT", company: "Starknet", sector: "Layer 2" },
+  { symbol: "MANTA/USDT", binanceSymbol: "MANTAUSDT", company: "Manta Network", sector: "Layer 2" },
+  { symbol: "METIS/USDT", binanceSymbol: "METISUSDT", company: "Metis", sector: "Layer 2" },
+  { symbol: "KAVA/USDT", binanceSymbol: "KAVAUSDT", company: "Kava", sector: "DeFi" },
+  { symbol: "EGLD/USDT", binanceSymbol: "EGLDUSDT", company: "MultiversX", sector: "Layer 1" },
+  { symbol: "FLR/USDT", binanceSymbol: "FLRUSDT", company: "Flare", sector: "Layer 1" },
+  { symbol: "FLOW/USDT", binanceSymbol: "FLOWUSDT", company: "Flow", sector: "Layer 1" },
+  { symbol: "XEC/USDT", binanceSymbol: "XECUSDT", company: "eCash", sector: "Payments" },
+  { symbol: "KLAY/USDT", binanceSymbol: "KLAYUSDT", company: "Klaytn", sector: "Layer 1" },
+  { symbol: "CHZ/USDT", binanceSymbol: "CHZUSDT", company: "Chiliz", sector: "Fan Tokens" },
+  { symbol: "MINA/USDT", binanceSymbol: "MINAUSDT", company: "Mina Protocol", sector: "Layer 1" },
+  { symbol: "THETA/USDT", binanceSymbol: "THETAUSDT", company: "Theta Network", sector: "Media" },
+  { symbol: "ZIL/USDT", binanceSymbol: "ZILUSDT", company: "Zilliqa", sector: "Layer 1" },
+  { symbol: "ONE/USDT", binanceSymbol: "ONEUSDT", company: "Harmony", sector: "Layer 1" },
+  { symbol: "CELO/USDT", binanceSymbol: "CELOUSDT", company: "Celo", sector: "Payments" },
+];
+
 export default function StocksPage() {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
 
-  const [selectedStock, setSelectedStock] = useState("TSLA/USDT");
-  const [binanceSymbol, setBinanceSymbol] = useState("TSLAUSDT");
+  const [selectedStock, setSelectedStock] = useState("BTC/USDT");
+  const [binanceSymbol, setBinanceSymbol] = useState("BTCUSDT");
   const [timeframe, setTimeframe] = useState("1h");
   const [orderType, setOrderType] = useState<"limit" | "market">("limit");
+  const [selectedSector, setSelectedSector] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [price, setPrice] = useState("");
   const [size, setSize] = useState("");
   const [total, setTotal] = useState("");
 
+  // TP/SL State
+  const [takeProfitEnabled, setTakeProfitEnabled] = useState(false);
+  const [stopLossEnabled, setStopLossEnabled] = useState(false);
+  const [takeProfitPrice, setTakeProfitPrice] = useState("");
+  const [stopLossPrice, setStopLossPrice] = useState("");
+
   // Order confirmation modal state
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [pendingOrder, setPendingOrder] = useState<CreateOrderParams | null>(null);
-
-  // Tokenized stocks available on Binance
-  const stocks: TokenizedStock[] = [
-    { symbol: "TSLA/USDT", binanceSymbol: "TSLAUSDT", company: "Tesla Inc.", sector: "Technology" },
-    { symbol: "AAPL/USDT", binanceSymbol: "AAPLUSDT", company: "Apple Inc.", sector: "Technology" },
-    { symbol: "AMZN/USDT", binanceSymbol: "AMZNUSDT", company: "Amazon.com Inc.", sector: "Consumer" },
-    { symbol: "GOOGL/USDT", binanceSymbol: "GOOGLUSDT", company: "Alphabet Inc.", sector: "Technology" },
-    { symbol: "MSFT/USDT", binanceSymbol: "MSFTUSDT", company: "Microsoft Corp.", sector: "Technology" },
-  ];
 
   const { candleData, tickerData, loading } = useCryptoData(binanceSymbol, timeframe);
   const { orderBook, recentTrades, connected, reconnecting, error } = useWebSocket(binanceSymbol);
@@ -61,7 +177,18 @@ export default function StocksPage() {
     }
   }, [tickerData, price]);
 
-  const currentStock = stocks.find(s => s.binanceSymbol === binanceSymbol) || stocks[0];
+  // Get unique sectors
+  const sectors = ["all", ...Array.from(new Set(STOCK_PAIRS.map(s => s.sector)))];
+
+  // Filter stocks
+  const filteredStocks = STOCK_PAIRS.filter(stock => {
+    const matchesSector = selectedSector === "all" || stock.sector === selectedSector;
+    const matchesSearch = stock.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         stock.company.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSector && matchesSearch;
+  });
+
+  const currentStock = STOCK_PAIRS.find(s => s.binanceSymbol === binanceSymbol) || STOCK_PAIRS[0];
 
   const handleSizeChange = (value: string) => {
     setSize(value);
@@ -87,6 +214,8 @@ export default function StocksPage() {
       side: 'BUY',
       amount: parseFloat(size),
       ...(orderType !== 'market' && { price: parseFloat(price) }),
+      ...(takeProfitEnabled && takeProfitPrice && { takeProfitPrice: parseFloat(takeProfitPrice) }),
+      ...(stopLossEnabled && stopLossPrice && { stopLossPrice: parseFloat(stopLossPrice) }),
     };
 
     setPendingOrder(order);
@@ -110,6 +239,8 @@ export default function StocksPage() {
       side: 'SELL',
       amount: parseFloat(size),
       ...(orderType !== 'market' && { price: parseFloat(price) }),
+      ...(takeProfitEnabled && takeProfitPrice && { takeProfitPrice: parseFloat(takeProfitPrice) }),
+      ...(stopLossEnabled && stopLossPrice && { stopLossPrice: parseFloat(stopLossPrice) }),
     };
 
     setPendingOrder(order);
@@ -119,6 +250,10 @@ export default function StocksPage() {
   const handleOrderSuccess = () => {
     setSize('');
     setTotal('');
+    setTakeProfitPrice('');
+    setStopLossPrice('');
+    setTakeProfitEnabled(false);
+    setStopLossEnabled(false);
     setShowOrderModal(false);
     setPendingOrder(null);
   };
@@ -137,7 +272,7 @@ export default function StocksPage() {
                   <div>
                     <div className="text-xl font-bold flex items-center gap-2">
                       {currentStock.symbol}
-                      <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded font-semibold">Tokenized Stock</span>
+                      <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded font-semibold">{currentStock.sector}</span>
                     </div>
                     <div className="text-xs text-muted-foreground">{currentStock.company}</div>
                   </div>
@@ -301,6 +436,49 @@ export default function StocksPage() {
                           className="w-full px-3 py-2 bg-card/50 border border-border rounded-lg text-sm"
                         />
                       </div>
+
+                      {/* TP/SL */}
+                      <div className="space-y-2 pt-2 border-t border-border/50">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id="buy-tp"
+                            checked={takeProfitEnabled}
+                            onChange={(e) => setTakeProfitEnabled(e.target.checked)}
+                            className="w-4 h-4 rounded border-border text-emerald-500 focus:ring-emerald-500"
+                          />
+                          <label htmlFor="buy-tp" className="text-xs text-muted-foreground">Take Profit</label>
+                        </div>
+                        {takeProfitEnabled && (
+                          <input
+                            type="number"
+                            value={takeProfitPrice}
+                            onChange={(e) => setTakeProfitPrice(e.target.value)}
+                            placeholder="TP Price"
+                            className="w-full px-3 py-1.5 bg-card border border-emerald-500/30 rounded text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          />
+                        )}
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id="buy-sl"
+                            checked={stopLossEnabled}
+                            onChange={(e) => setStopLossEnabled(e.target.checked)}
+                            className="w-4 h-4 rounded border-border text-red-500 focus:ring-red-500"
+                          />
+                          <label htmlFor="buy-sl" className="text-xs text-muted-foreground">Stop Loss</label>
+                        </div>
+                        {stopLossEnabled && (
+                          <input
+                            type="number"
+                            value={stopLossPrice}
+                            onChange={(e) => setStopLossPrice(e.target.value)}
+                            placeholder="SL Price"
+                            className="w-full px-3 py-1.5 bg-card border border-red-500/30 rounded text-xs focus:outline-none focus:ring-2 focus:ring-red-500"
+                          />
+                        )}
+                      </div>
+
                       <button
                         onClick={handleBuyClick}
                         className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg transition-all"
@@ -346,6 +524,49 @@ export default function StocksPage() {
                           className="w-full px-3 py-2 bg-card/50 border border-border rounded-lg text-sm"
                         />
                       </div>
+
+                      {/* TP/SL for Sell */}
+                      <div className="space-y-2 pt-2 border-t border-border/50">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id="sell-tp"
+                            checked={takeProfitEnabled}
+                            onChange={(e) => setTakeProfitEnabled(e.target.checked)}
+                            className="w-4 h-4 rounded border-border text-emerald-500 focus:ring-emerald-500"
+                          />
+                          <label htmlFor="sell-tp" className="text-xs text-muted-foreground">Take Profit</label>
+                        </div>
+                        {takeProfitEnabled && (
+                          <input
+                            type="number"
+                            value={takeProfitPrice}
+                            onChange={(e) => setTakeProfitPrice(e.target.value)}
+                            placeholder="TP Price"
+                            className="w-full px-3 py-1.5 bg-card border border-emerald-500/30 rounded text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          />
+                        )}
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id="sell-sl"
+                            checked={stopLossEnabled}
+                            onChange={(e) => setStopLossEnabled(e.target.checked)}
+                            className="w-4 h-4 rounded border-border text-red-500 focus:ring-red-500"
+                          />
+                          <label htmlFor="sell-sl" className="text-xs text-muted-foreground">Stop Loss</label>
+                        </div>
+                        {stopLossEnabled && (
+                          <input
+                            type="number"
+                            value={stopLossPrice}
+                            onChange={(e) => setStopLossPrice(e.target.value)}
+                            placeholder="SL Price"
+                            className="w-full px-3 py-1.5 bg-card border border-red-500/30 rounded text-xs focus:outline-none focus:ring-2 focus:ring-red-500"
+                          />
+                        )}
+                      </div>
+
                       <button
                         onClick={handleSellClick}
                         className="w-full py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg transition-all"
@@ -360,10 +581,35 @@ export default function StocksPage() {
 
             {/* Right: Markets + Trades */}
             <div className="xl:col-span-3 space-y-4">
-              <div className="glass rounded-xl p-4">
-                <h3 className="text-sm font-semibold mb-3">Available Stocks</h3>
-                <div className="space-y-2">
-                  {stocks.map((stock) => (
+              <div className="glass rounded-xl p-4 max-h-[600px] overflow-hidden flex flex-col">
+                <div className="mb-3">
+                  <h3 className="text-sm font-semibold mb-2">Available Pairs ({STOCK_PAIRS.length})</h3>
+
+                  {/* Search */}
+                  <input
+                    type="text"
+                    placeholder="Search pairs..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-sm mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+
+                  {/* Sector Filter */}
+                  <select
+                    value={selectedSector}
+                    onChange={(e) => setSelectedSector(e.target.value)}
+                    className="w-full px-3 py-2 bg-card border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {sectors.map(sector => (
+                      <option key={sector} value={sector}>
+                        {sector === "all" ? "All Sectors" : sector}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex-1 overflow-y-auto space-y-2">
+                  {filteredStocks.map((stock) => (
                     <button
                       key={stock.binanceSymbol}
                       onClick={() => {
@@ -382,6 +628,11 @@ export default function StocksPage() {
                       <div className="text-xs text-blue-400 mt-1">{stock.sector}</div>
                     </button>
                   ))}
+                  {filteredStocks.length === 0 && (
+                    <div className="text-center py-8 text-muted-foreground text-sm">
+                      No pairs found
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="h-[400px]">

@@ -12,6 +12,7 @@ datasource db {
 // User account
 model User {
   id              String    @id @default(cuid())
+  uid             String?   @unique // Unique user ID displayed to users
   email           String    @unique
   username        String    @unique
   passwordHash    String
@@ -43,6 +44,7 @@ model User {
 
   @@index([email])
   @@index([username])
+  @@index([uid])
 }
 
 enum UserRole {
