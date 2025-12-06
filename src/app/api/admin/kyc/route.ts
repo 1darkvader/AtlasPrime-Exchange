@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminUser } from '@/lib/auth-middleware';
 import { prisma } from '@/lib/prisma';
+import { emailService } from '@/lib/email/mailgun';
 
 export async function GET(request: NextRequest) {
   try {
@@ -103,15 +104,36 @@ export async function POST(request: NextRequest) {
           where: { id: document.userId },
           data: { kycStatus: 'VERIFIED' }
         });
+
+        // Send approval email
+        try {
+          await emailService.sendKYCApprovalEmail(
+            document.user.email,
+            document.user.username
+          );
+        } catch (error) {
+          console.error('Failed to send KYC approval email:', error);
+        }
       }
     }
 
-    // If rejected, update user KYC status
+    // If rejected, update user KYC status and send email
     if (action === 'REJECTED') {
       await prisma.user.update({
         where: { id: document.userId },
         data: { kycStatus: 'REJECTED' }
       });
+
+      // Send rejection email
+      try {
+        await emailService.sendKYCRejectionEmail(
+          document.user.email,
+          document.user.username,
+          rejectionReason || 'Your documents did not meet our verification requirements.'
+        );
+      } catch (error) {
+        console.error('Failed to send KYC rejection email:', error);
+      }
     }
 
     return NextResponse.json({ success: true, document });
