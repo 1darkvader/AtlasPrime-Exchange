@@ -1,0 +1,643 @@
+$ next dev -H 0.0.0.0 --turbopack
+   ▲ Next.js 15.3.2 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://0.0.0.0:3000
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 1381ms
+ ○ Compiling / ...
+ ✓ Compiled / in 10.6s
+ GET / 200 in 11192ms
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 2.3s
+ GET /admin 200 in 2409ms
+ ○ Compiling /api/auth/me ...
+ ✓ Compiled /api/auth/me in 1759ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 2342ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 115ms
+ ○ Compiling /api/admin/stats ...
+ ✓ Compiled /api/admin/stats in 1925ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?limit=5 401 in 2131ms
+Error fetching admin stats: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/stats/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/stats 401 in 2259ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?limit=5 401 in 105ms
+Error fetching admin stats: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/stats/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/stats 401 in 86ms
+ ○ Compiling /admin/users ...
+ ✓ Compiled /admin/users in 2.1s
+ GET /admin/users 200 in 2167ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 127ms
+ GET /admin/users 200 in 108ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 145ms
+ GET /admin 200 in 63ms
+ ○ Compiling /login ...
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 405ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 218ms
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 238ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 245ms
+ ✓ Compiled /login in 3.2s
+ GET /login 200 in 3283ms
+ ○ Compiling /api/auth/login ...
+ ✓ Compiled /api/auth/login in 2s
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE ("public"."User"."email" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query UPDATE "public"."User" SET "lastLogin" = $1, "updatedAt" = $2 WHERE ("public"."User"."id" = $3 AND 1=1) RETURNING "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin"
+prisma:query INSERT INTO "public"."Session" ("id","userId","token","expiresAt","createdAt") VALUES ($1,$2,$3,$4,$5) RETURNING "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt"
+ POST /api/auth/login 200 in 2655ms
+ ○ Compiling /portfolio ...
+ ✓ Compiled /portfolio in 3.1s
+ GET /portfolio 200 in 3111ms
+ GET /portfolio 200 in 45ms
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE ("public"."User"."email" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query UPDATE "public"."User" SET "lastLogin" = $1, "updatedAt" = $2 WHERE ("public"."User"."id" = $3 AND 1=1) RETURNING "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin"
+prisma:query INSERT INTO "public"."Session" ("id","userId","token","expiresAt","createdAt") VALUES ($1,$2,$3,$4,$5) RETURNING "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt"
+ POST /api/auth/login 200 in 237ms
+ GET /portfolio 200 in 54ms
+ GET /portfolio 200 in 40ms
+ GET /admin 200 in 78ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 342ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?limit=5 401 in 114ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+Error fetching admin stats: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/stats/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/stats 401 in 217ms
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 286ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?limit=5 401 in 87ms
+Error fetching admin stats: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/stats/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/stats 401 in 162ms
+ GET /admin/users 200 in 28ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 73ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 87ms
+ ○ Compiling /admin/kyc ...
+ ✓ Compiled /admin/kyc in 2.1s
+ GET /admin/kyc 200 in 2177ms
+ ○ Compiling /api/admin/kyc ...
+ ✓ Compiled /api/admin/kyc in 938ms
+Error fetching KYC documents: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/kyc/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/kyc?status=PENDING 401 in 1092ms
+Error fetching KYC documents: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/kyc/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/kyc?status=PENDING 401 in 88ms
+ ○ Compiling /admin/transactions ...
+ ✓ Compiled /admin/transactions in 2.7s
+ GET /admin/transactions 200 in 2705ms
+ ○ Compiling /api/admin/transactions ...
+ ✓ Compiled /api/admin/transactions in 922ms
+Error fetching transactions: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/transactions/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/transactions?page=1&limit=20 401 in 1112ms
+Error fetching transactions: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/transactions/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/transactions?page=1&limit=20 401 in 97ms
+ ○ Compiling /admin/analytics ...
+ ✓ Compiled /admin/analytics in 1926ms
+ GET /admin/analytics 200 in 1957ms
+Error fetching admin stats: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/stats/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/stats 401 in 84ms
+Error fetching admin stats: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/stats/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/stats 401 in 67ms
+ ○ Compiling /admin/notifications ...
+ ✓ Compiled /admin/notifications in 2s
+ GET /admin/notifications 200 in 2042ms
+ ○ Compiling /admin/settings ...
+ ✓ Compiled /admin/settings in 1986ms
+ GET /admin/settings 200 in 2005ms
+ GET /admin/users 200 in 22ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 107ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 192ms
+ GET /admin/kyc 200 in 25ms
+Error fetching KYC documents: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/kyc/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/kyc?status=PENDING 401 in 91ms
+Error fetching KYC documents: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/kyc/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/kyc?status=PENDING 401 in 75ms
+ GET /admin/transactions 200 in 22ms
+Error fetching transactions: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/transactions/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/transactions?page=1&limit=20 401 in 83ms
+Error fetching transactions: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/transactions/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/transactions?page=1&limit=20 401 in 88ms
+ GET /admin/analytics 200 in 27ms
+Error fetching admin stats: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/stats/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/stats 401 in 99ms
+Error fetching admin stats: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/stats/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/stats 401 in 63ms
+ GET /admin 200 in 29ms
+Error fetching admin stats: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/stats/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/stats 401 in 115ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?limit=5 401 in 251ms
+Error fetching admin stats: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/stats/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/stats 401 in 75ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?limit=5 401 in 93ms
+ GET /admin/users 200 in 77ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 133ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 116ms
+ GET /admin/users 200 in 104ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 326ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 106ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 158ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 146ms
+ GET /admin/users 200 in 44ms
+ GET /admin/users 200 in 87ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 398ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 116ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 213ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 127ms
+ GET /admin/users 200 in 58ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 303ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 74ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 111ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 101ms
+ GET /admin/users 200 in 82ms
+ GET /admin/users 200 in 43ms
+ GET /admin/users 200 in 53ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 335ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 113ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 220ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 74ms
+ GET /admin/users 200 in 47ms
+ GET /admin/users 200 in 47ms
+ GET /admin/users 200 in 74ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 315ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 78ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 192ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 98ms
+ GET /admin/users 200 in 72ms
+ GET /admin/users 200 in 54ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 335ms
+prisma:query SELECT "public"."Session"."id", "public"."Session"."userId", "public"."Session"."token", "public"."Session"."expiresAt", "public"."Session"."createdAt" FROM "public"."Session" WHERE ("public"."Session"."token" = $1 AND 1=1) LIMIT $2 OFFSET $3
+prisma:query SELECT "public"."User"."id", "public"."User"."email", "public"."User"."username", "public"."User"."passwordHash", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."avatar", "public"."User"."role"::text, "public"."User"."emailVerified", "public"."User"."kycStatus"::text, "public"."User"."twoFactorEnabled", "public"."User"."twoFactorSecret", "public"."User"."createdAt", "public"."User"."updatedAt", "public"."User"."lastLogin" FROM "public"."User" WHERE "public"."User"."id" = $1 OFFSET $2
+ GET /api/auth/me 200 in 73ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 85ms
+Error fetching users: Error: Unauthorized: Admin access required
+    at requireAdmin (src/lib/auth-middleware.ts:54:10)
+    at async GET (src/app/api/admin/users/route.ts:8:4)
+  52 |   
+  53 |   if (!user) {
+> 54 |     throw new Error('Unauthorized: Admin access required');
+     |          ^
+  55 |   }
+  56 |
+  57 |   return user;
+ GET /api/admin/users?page=1&limit=15 401 in 64ms
+ GET /admin/users 200 in 39ms
+[?25h
