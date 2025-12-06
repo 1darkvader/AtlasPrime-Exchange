@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import prisma from '@/lib/prisma';
+import { emailService } from '@/lib/email/mailgun';
+import crypto from 'crypto';
 
 const signupSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -119,6 +121,30 @@ export async function POST(request: NextRequest) {
         token,
         expiresAt,
       },
+    });
+
+    // Generate email verification token
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationTokenExpiry = new Date();
+    verificationTokenExpiry.setHours(verificationTokenExpiry.getHours() + 24); // 24 hour expiry
+
+    // Save verification token to user
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        emailVerificationToken: verificationToken,
+        emailVerificationTokenExpiry: verificationTokenExpiry,
+      },
+    });
+
+    // Send welcome email (async, don't wait for it)
+    emailService.sendWelcomeEmail(user.email, user.username).catch((error) => {
+      console.error('Failed to send welcome email:', error);
+    });
+
+    // Send verification email (async, don't wait for it)
+    emailService.sendVerificationEmail(user.email, verificationToken).catch((error) => {
+      console.error('Failed to send verification email:', error);
     });
 
     // Return user data without password

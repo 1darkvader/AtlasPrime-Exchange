@@ -29,6 +29,14 @@ model User {
   twoFactorEnabled Boolean  @default(false)
   twoFactorSecret String?
 
+  // Email verification
+  emailVerificationToken       String?
+  emailVerificationTokenExpiry DateTime?
+
+  // Password reset
+  passwordResetToken           String?
+  passwordResetTokenExpiry     DateTime?
+
   // Timestamps
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
