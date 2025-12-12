@@ -1,8 +1,34 @@
 # Version 89: Real-Time P&L Tracking for Open Orders
 
 **Date:** December 12, 2025
-**Status:** ✅ COMPLETE - READY TO TEST
+**Status:** ✅ COMPLETE - CRITICAL FIX DEPLOYED
 **Pattern:** Live P&L calculation based on market price movements
+
+---
+
+## 🚨 CRITICAL FIX - Commit b89051b
+
+**Issue Found During Testing:**
+- All orders (including LIMIT orders) were showing as FILLED immediately
+- Orders appearing in "Order History" instead of "Open Orders"
+- Real-time P&L tracking not working because orders weren't staying OPEN
+
+**Root Cause:**
+- `ordersAPI.createOrder()` in `/src/lib/api/orders.ts` was calling `/api/orders/execute`
+- The `/execute` endpoint uses old logic that immediately fills ALL orders
+- Should have been calling `/api/orders` endpoint (new logic)
+
+**Fix Applied:**
+- ✅ Changed endpoint from `/api/orders/execute` → `/api/orders`
+- ✅ Updated parameter mapping to match new API
+- ✅ LIMIT orders now stay OPEN as intended
+- ✅ MARKET orders execute immediately as intended
+
+**Commits:**
+- `497c322` - Initial Version 89 (backend + frontend enhancements)
+- `b89051b` - Critical fix for orders API endpoint
+
+---
 
 ---
 
