@@ -19,8 +19,9 @@
   - Total unrealized P&L (aggregated)
   - Live tracking count (X/Y orders being tracked)
 - [x] Test on production (ready for testing)
-- [ ] Apply same enhancements to Margin and Derivatives pages
+- [x] Apply same enhancements to Margin and Derivatives pages
 - [x] Create Version 89
+- [x] Push to GitHub
 
 **What's New:**
 - ✅ LIMIT orders now stay OPEN until market price reaches limit
