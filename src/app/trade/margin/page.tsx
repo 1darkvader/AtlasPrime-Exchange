@@ -570,6 +570,28 @@ export default function MarginTradingPage() {
             orders={orders}
             loadingOrders={loadingOrders}
             onRefreshOrders={fetchOrders}
+            tickerData={tickerData}
+            binanceSymbol={binanceSymbol}
+            onCancelOrder={async (orderId: string) => {
+              if (!confirm('Are you sure you want to cancel this order?')) return;
+              try {
+                const token = localStorage.getItem('atlasprime_token');
+                const response = await fetch(`/api/orders/${orderId}`, {
+                  method: 'DELETE',
+                  headers: token ? {
+                    'Authorization': `Bearer ${token}`,
+                  } : {},
+                });
+                if (response.ok) {
+                  await Promise.all([fetchOrders(), handleOrderSuccess()]);
+                } else {
+                  alert('Failed to cancel order');
+                }
+              } catch (error) {
+                console.error('Failed to cancel order:', error);
+                alert('Failed to cancel order');
+              }
+            }}
           />
         </div>
       </main>

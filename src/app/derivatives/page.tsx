@@ -785,21 +785,44 @@ export default function DerivativesPage() {
                             <th className="text-left py-3 px-4">Pair</th>
                             <th className="text-left py-3 px-4">Type</th>
                             <th className="text-left py-3 px-4">Side</th>
-                            <th className="text-right py-3 px-4">Price</th>
+                            <th className="text-right py-3 px-4">Entry Price</th>
+                            <th className="text-right py-3 px-4">Mark Price</th>
                             <th className="text-right py-3 px-4">Amount</th>
-                            <th className="text-right py-3 px-4">Filled</th>
-                            <th className="text-right py-3 px-4">Total</th>
+                            <th className="text-right py-3 px-4">Unrealized P&L</th>
+                            <th className="text-right py-3 px-4">Total Value</th>
                             <th className="text-center py-3 px-4">Action</th>
                           </tr>
                         </thead>
                         <tbody>
                           {orders.filter(o => o.status === 'OPEN').map((order) => {
                             const orderTime = new Date(order.createdAt);
-                            const filled = parseFloat(order.filled || 0);
                             const amount = parseFloat(order.amount);
-                            const price = parseFloat(order.price || 0);
-                            const total = price * amount;
-                            const filledPercent = amount > 0 ? (filled / amount) * 100 : 0;
+                            const entryPrice = parseFloat(order.price || 0);
+
+                            // Get current market price for this pair
+                            const currentPrice = order.pair === binanceSymbol && tickerData
+                              ? tickerData.price
+                              : entryPrice; // Fallback to entry price if not current pair
+
+                            // Calculate unrealized P&L for LONG/SHORT positions
+                            let unrealizedPnL = 0;
+                            let pnlPercent = 0;
+                            const leverage = order.leverage || 1;
+
+                            if (order.side === 'LONG' && entryPrice > 0) {
+                              // LONG: profit when price goes up
+                              const priceDiff = currentPrice - entryPrice;
+                              unrealizedPnL = (priceDiff / entryPrice) * (amount * entryPrice) * leverage;
+                              pnlPercent = (priceDiff / entryPrice) * 100 * leverage;
+                            } else if (order.side === 'SHORT' && entryPrice > 0) {
+                              // SHORT: profit when price goes down
+                              const priceDiff = entryPrice - currentPrice;
+                              unrealizedPnL = (priceDiff / entryPrice) * (amount * entryPrice) * leverage;
+                              pnlPercent = (priceDiff / entryPrice) * 100 * leverage;
+                            }
+
+                            const totalValue = amount * entryPrice;
+                            const isLive = order.pair === binanceSymbol; // Show live indicator if current pair
 
                             return (
                               <tr key={order.id} className="border-b border-border/50 hover:bg-card/50">
@@ -812,30 +835,49 @@ export default function DerivativesPage() {
                                     hour12: false
                                   })}
                                 </td>
-                                <td className="py-3 px-4 font-medium">{order.pair}</td>
+                                <td className="py-3 px-4 font-medium">
+                                  {order.pair}
+                                  {isLive && (
+                                    <span className="ml-2 px-1.5 py-0.5 bg-green-500/20 text-green-400 text-xs rounded">
+                                      LIVE
+                                    </span>
+                                  )}
+                                </td>
                                 <td className="py-3 px-4">
                                   <span className="px-2 py-0.5 bg-card rounded text-xs">
                                     {order.type}
                                   </span>
                                 </td>
                                 <td className="py-3 px-4">
-                                  <span className={`font-medium ${order.side === 'LONG' || order.side === 'BUY' ? 'text-emerald-400' : 'text-red-400'}`}>
-                                    {order.side}
+                                  <span className={`font-medium ${order.side === 'LONG' ? 'text-emerald-400' : 'text-red-400'}`}>
+                                    {order.side} {leverage}x
                                   </span>
                                 </td>
-                                <td className="py-3 px-4 text-right">
-                                  {order.type === 'MARKET' ? 'Market' : price.toFixed(2)}
+                                <td className="py-3 px-4 text-right font-mono">
+                                  ${entryPrice.toFixed(2)}
                                 </td>
-                                <td className="py-3 px-4 text-right">{amount.toFixed(6)}</td>
+                                <td className="py-3 px-4 text-right font-mono">
+                                  <div className="flex flex-col items-end">
+                                    <span>${currentPrice.toFixed(2)}</span>
+                                    {isLive && currentPrice !== entryPrice && (
+                                      <span className={`text-xs ${currentPrice > entryPrice ? 'text-emerald-400' : 'text-red-400'}`}>
+                                        {currentPrice > entryPrice ? '↑' : '↓'} ${Math.abs(currentPrice - entryPrice).toFixed(2)}
+                                      </span>
+                                    )}
+                                  </div>
+                                </td>
+                                <td className="py-3 px-4 text-right font-mono">{amount.toFixed(6)}</td>
                                 <td className="py-3 px-4 text-right">
-                                  {filled.toFixed(6)}
-                                  {amount > 0 && (
-                                    <span className="text-xs text-muted-foreground ml-1">
-                                      ({filledPercent.toFixed(0)}%)
+                                  <div className="flex flex-col items-end">
+                                    <span className={`font-bold ${unrealizedPnL >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                      {unrealizedPnL >= 0 ? '+' : ''}{unrealizedPnL.toFixed(2)} USD
                                     </span>
-                                  )}
+                                    <span className={`text-xs ${pnlPercent >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                      {pnlPercent >= 0 ? '+' : ''}{pnlPercent.toFixed(2)}%
+                                    </span>
+                                  </div>
                                 </td>
-                                <td className="py-3 px-4 text-right">{total.toFixed(2)}</td>
+                                <td className="py-3 px-4 text-right font-mono">${totalValue.toFixed(2)}</td>
                                 <td className="py-3 px-4 text-center">
                                   <button
                                     onClick={() => handleCancelOrder(order.id)}
@@ -850,6 +892,82 @@ export default function DerivativesPage() {
                           })}
                         </tbody>
                       </table>
+
+                      {/* Summary Footer */}
+                      <div className="mt-4 p-4 bg-purple-500/10 rounded-lg border border-purple-500/20">
+                        <div className="grid grid-cols-4 gap-4 text-sm">
+                          <div>
+                            <div className="text-xs text-muted-foreground mb-1">Total Open Orders</div>
+                            <div className="text-lg font-bold text-purple-400">
+                              {orders.filter(o => o.status === 'OPEN').length}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-xs text-muted-foreground mb-1">Total Position Value</div>
+                            <div className="text-lg font-bold">
+                              ${orders.filter(o => o.status === 'OPEN').reduce((sum, o) => {
+                                return sum + (parseFloat(o.amount) * parseFloat(o.price || 0));
+                              }, 0).toFixed(2)}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-xs text-muted-foreground mb-1">Total Unrealized P&L</div>
+                            <div className={`text-lg font-bold ${
+                              orders.filter(o => o.status === 'OPEN').reduce((sum, o) => {
+                                const entryPrice = parseFloat(o.price || 0);
+                                const amount = parseFloat(o.amount);
+                                const currentPrice = o.pair === binanceSymbol && tickerData ? tickerData.price : entryPrice;
+                                const leverage = o.leverage || 1;
+
+                                if (o.side === 'LONG' && entryPrice > 0) {
+                                  const priceDiff = currentPrice - entryPrice;
+                                  return sum + ((priceDiff / entryPrice) * (amount * entryPrice) * leverage);
+                                } else if (o.side === 'SHORT' && entryPrice > 0) {
+                                  const priceDiff = entryPrice - currentPrice;
+                                  return sum + ((priceDiff / entryPrice) * (amount * entryPrice) * leverage);
+                                }
+                                return sum;
+                              }, 0) >= 0 ? 'text-emerald-400' : 'text-red-400'
+                            }`}>
+                              {orders.filter(o => o.status === 'OPEN').reduce((sum, o) => {
+                                const entryPrice = parseFloat(o.price || 0);
+                                const amount = parseFloat(o.amount);
+                                const currentPrice = o.pair === binanceSymbol && tickerData ? tickerData.price : entryPrice;
+                                const leverage = o.leverage || 1;
+
+                                if (o.side === 'LONG' && entryPrice > 0) {
+                                  const priceDiff = currentPrice - entryPrice;
+                                  return sum + ((priceDiff / entryPrice) * (amount * entryPrice) * leverage);
+                                } else if (o.side === 'SHORT' && entryPrice > 0) {
+                                  const priceDiff = entryPrice - currentPrice;
+                                  return sum + ((priceDiff / entryPrice) * (amount * entryPrice) * leverage);
+                                }
+                                return sum;
+                              }, 0) >= 0 ? '+' : ''}${orders.filter(o => o.status === 'OPEN').reduce((sum, o) => {
+                                const entryPrice = parseFloat(o.price || 0);
+                                const amount = parseFloat(o.amount);
+                                const currentPrice = o.pair === binanceSymbol && tickerData ? tickerData.price : entryPrice;
+                                const leverage = o.leverage || 1;
+
+                                if (o.side === 'LONG' && entryPrice > 0) {
+                                  const priceDiff = currentPrice - entryPrice;
+                                  return sum + ((priceDiff / entryPrice) * (amount * entryPrice) * leverage);
+                                } else if (o.side === 'SHORT' && entryPrice > 0) {
+                                  const priceDiff = entryPrice - currentPrice;
+                                  return sum + ((priceDiff / entryPrice) * (amount * entryPrice) * leverage);
+                                }
+                                return sum;
+                              }, 0).toFixed(2)}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-xs text-muted-foreground mb-1">Live Tracking</div>
+                            <div className="text-lg font-bold text-green-400">
+                              {orders.filter(o => o.status === 'OPEN' && o.pair === binanceSymbol).length} / {orders.filter(o => o.status === 'OPEN').length}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </>
