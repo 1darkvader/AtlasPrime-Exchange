@@ -67,21 +67,25 @@ function getAuthHeaders(): HeadersInit {
 
 export const ordersAPI = {
   /**
-   * Create and execute a new order (deducts from wallet)
+   * Create a new order (LIMIT orders stay OPEN, MARKET orders execute immediately)
    */
   async createOrder(params: CreateOrderParams): Promise<OrderResponse> {
     try {
-      // Call execute endpoint which handles wallet deduction
-      const response = await fetch(`${API_BASE_URL}/api/orders/execute`, {
+      // Call new orders endpoint which properly handles LIMIT vs MARKET
+      const response = await fetch(`${API_BASE_URL}/api/orders`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({
+          pair: params.pair,
+          type: params.type,
           side: params.side,
-          pair: params.pair.replace('USDT', '/USDT').replace('BTC', '/BTC').replace('ETH', '/ETH').replace('BNB', '/BNB').replace('SOL', '/SOL'),
-          orderType: params.type.toLowerCase(),
-          price: params.price || 0,
+          price: params.price,
           amount: params.amount,
+          stopPrice: params.stopPrice,
+          takeProfitPrice: params.takeProfitPrice,
+          stopLossPrice: params.stopLossPrice,
           leverage: params.leverage,
+          positionMode: params.positionMode,
         }),
       });
 
