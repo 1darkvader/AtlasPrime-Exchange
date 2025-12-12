@@ -1,0 +1,46 @@
+=============================================================================
+CRITICAL FIXES READY - MANUAL GITHUB PUSH REQUIRED
+=============================================================================
+
+WHAT'S FIXED:
+ Binance API HTTP 451 block - Added CoinGecko as backup
+ Asset naming bug (BTC/ → BTC) - Fixed parser
+ Sell order failures - Will work after cleanup script
+ Admin balance wrong - Real prices from CoinGecko
+
+FILES CHANGED:
+1. src/lib/priceService.ts - CoinGecko integration
+2. scripts/cleanup-assets.ts - NEW database cleanup
+3. .same/CRITICAL-FIX-V81.2.md - Deployment guide
+4. .same/MANUAL-PUSH-REQUIRED.md - This guide
+
+HOW TO PUSH:
+=============
+
+cd /home/project/atlasprime-exchange
+
+# Initialize git (the .git directory is corrupted)
+rm -rf .git
+git init
+git branch -M main
+git remote add origin https://github.com/1darkvader/AtlasPrime-Exchange.git
+
+# Set your identity
+git config user.email "youremail@example.com"
+git config user.name "Your Name"
+
+# Commit and push
+git add -A
+git commit -m "Critical fix: Binance HTTP 451 + Asset naming"
+git push -u origin main --force
+
+When prompted for password, use your GitHub Personal Access Token
+(NOT your regular password)
+
+AFTER PUSH:
+===========
+1. Render will auto-deploy (5-10 min)
+2. Run: bun run scripts/cleanup-assets.ts
+3. Test trading - should work!
+
+=============================================================================
