@@ -180,7 +180,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create the order
+    // Create the order with filled initialized to 0
     const order = await prisma.order.create({
       data: {
         userId: user.id,
@@ -189,14 +189,17 @@ export async function POST(request: NextRequest) {
         side: side.toUpperCase(),
         price: price ? parseFloat(price) : null,
         amount: orderAmount,
+        filled: 0, // Initialize filled amount to 0
         stopPrice: stopPrice ? parseFloat(stopPrice) : null,
         takeProfitPrice: takeProfitPrice ? parseFloat(takeProfitPrice) : null,
         stopLossPrice: stopLossPrice ? parseFloat(stopLossPrice) : null,
         leverage: leverage ? parseInt(leverage) : null,
         positionMode: positionMode || null,
-        status: 'OPEN',
+        status: 'OPEN', // All orders start as OPEN
       },
     });
+
+    console.log(`✅ Order created: ${order.id} - ${type} ${side} ${amount} ${pair} @ ${price || 'MARKET'}`);
 
     // Lock the balance for limit orders
     if (type.toUpperCase() !== 'MARKET' && ['BUY', 'LONG'].includes(side.toUpperCase())) {
@@ -206,17 +209,24 @@ export async function POST(request: NextRequest) {
           lockedBalance: wallet.lockedBalance.toNumber() + requiredBalance,
         },
       });
+      console.log(`🔒 Locked ${requiredBalance} ${quoteAsset} for order ${order.id}`);
     }
 
     // For market orders, execute immediately (in a real system, this would be handled by a matching engine)
     if (type.toUpperCase() === 'MARKET') {
-      // This is a simplified implementation
-      // In production, you'd connect to an exchange API or matching engine
-      await prisma.order.update({
+      console.log(`⚡ Executing MARKET order ${order.id} immediately...`);
+
+      // Get current market price from a price feed (simplified for now)
+      // In production, you'd use the actual market price
+      const marketPrice = price ? parseFloat(price) : 0;
+
+      // Update order to FILLED
+      const filledOrder = await prisma.order.update({
         where: { id: order.id },
         data: {
           status: 'FILLED',
           filled: orderAmount,
+          price: marketPrice, // Set the execution price
           completedAt: new Date(),
         },
       });
@@ -228,17 +238,28 @@ export async function POST(request: NextRequest) {
           userId: user.id,
           pair: pair.toUpperCase(),
           side: side.toUpperCase(),
-          price: 0, // Would be filled from market price
+          price: marketPrice,
           amount: orderAmount,
           fee: orderAmount * 0.001, // 0.1% fee
           feeAsset: quoteAsset,
         },
       });
+
+      console.log(`✅ MARKET order ${order.id} FILLED at ${marketPrice}`);
+
+      return NextResponse.json({
+        success: true,
+        message: 'Market order executed successfully',
+        order: filledOrder,
+      }, { status: 201 });
     }
+
+    // For LIMIT and STOP_LIMIT orders, return OPEN order
+    console.log(`📋 LIMIT order ${order.id} placed - waiting for market price to reach ${price}`);
 
     return NextResponse.json({
       success: true,
-      message: 'Order placed successfully',
+      message: 'Limit order placed successfully. It will be filled when market price reaches your limit.',
       order,
     }, { status: 201 });
   } catch (error) {

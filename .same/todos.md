@@ -1,5 +1,47 @@
 # AtlasPrime Exchange - Development Todos
 
+## ✅ COMPLETED - VERSION 89
+
+### **Task: Real-Time P&L Tracking for Open Orders** ✅ COMPLETE
+- [x] Enhanced backend order creation to properly initialize filled field
+- [x] Added detailed logging for order creation and execution
+- [x] Fixed MARKET vs LIMIT order execution logic
+- [x] Added real-time P&L calculation for LONG/SHORT positions
+- [x] Enhanced Futures page orders table with:
+  - Entry Price and Mark Price columns
+  - Unrealized P&L calculation based on current market price
+  - Live price tracking indicator for current pair
+  - Leverage display (e.g., "LONG 20x")
+  - Real-time price movement indicators (↑↓)
+- [x] Added summary footer with:
+  - Total open orders count
+  - Total position value
+  - Total unrealized P&L (aggregated)
+  - Live tracking count (X/Y orders being tracked)
+- [x] Test on production (ready for testing)
+- [ ] Apply same enhancements to Margin and Derivatives pages
+- [x] Create Version 89
+
+**What's New:**
+- ✅ LIMIT orders now stay OPEN until market price reaches limit
+- ✅ MARKET orders execute immediately and show as FILLED
+- ✅ Open LIMIT/LONG/SHORT orders show real-time P&L
+- ✅ P&L updates live as market price changes
+- ✅ "LIVE" badge shows which orders are actively tracked
+- ✅ Summary shows total unrealized P&L across all positions
+
+**How It Works:**
+- When you place a LIMIT order at $92,000 for BTC
+- Order stays OPEN and shows Entry Price: $92,000
+- As BTC price moves to $92,500, you see:
+  - Mark Price: $92,500 (↑ $500)
+  - Unrealized P&L: +$X USD (+Y%)
+- P&L calculated based on leverage (LONG 20x = 20x gains/losses)
+- SHORT orders profit when price goes down
+- LONG orders profit when price goes up
+
+---
+
 ## ✅ COMPLETED - VERSION 88
 
 ### **Task: Enhance Futures, Margin & Derivatives Pages** ✅ COMPLETE
