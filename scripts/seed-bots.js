@@ -3,14 +3,9 @@ require('dotenv/config');
 
 const { PrismaClient } = require('@prisma/client');
 
-// Create a simple Prisma client instance without adapters
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL,
-    },
-  },
-});
+// Create a simple Prisma client instance
+// DATABASE_URL is automatically read from environment
+const prisma = new PrismaClient();
 
 const tradingBots = [
   {
