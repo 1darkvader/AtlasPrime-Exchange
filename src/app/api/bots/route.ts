@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 // GET /api/bots - Get all available trading bots
 export async function GET(request: NextRequest) {
   try {
-    const bots = await prisma.tradingBot.findMany({
+    const botsRaw = await prisma.tradingBot.findMany({
       where: {
         isActive: true,
       },
@@ -12,6 +12,14 @@ export async function GET(request: NextRequest) {
         totalUsers: 'desc', // Sort by most popular
       },
     });
+
+    const bots = botsRaw.map((b: any) => ({
+      ...b,
+      winRate: parseFloat(b.winRate?.toString() ?? '0'),
+      avgMonthlyReturn: parseFloat(b.avgMonthlyReturn?.toString() ?? '0'),
+      minInvestment: parseFloat(b.minInvestment?.toString() ?? '0'),
+      maxInvestment: parseFloat(b.maxInvestment?.toString() ?? '0'),
+    }));
 
     return NextResponse.json({
       success: true,

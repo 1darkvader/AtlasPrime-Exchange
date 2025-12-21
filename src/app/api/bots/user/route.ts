@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const userBots = await prisma.userBot.findMany({
+    const userBotsRaw = await prisma.userBot.findMany({
       where: {
         userId: user.id,
       },
@@ -56,6 +56,29 @@ export async function GET(request: NextRequest) {
         createdAt: 'desc',
       },
     });
+
+    const userBots = userBotsRaw.map((ub: any) => ({
+      ...ub,
+      investedAmount: parseFloat(ub.investedAmount?.toString() ?? '0'),
+      currentValue: parseFloat(ub.currentValue?.toString() ?? '0'),
+      totalProfit: parseFloat(ub.totalProfit?.toString() ?? '0'),
+      profitPercent: parseFloat(ub.profitPercent?.toString() ?? '0'),
+      trades: (ub.trades ?? []).map((t: any) => ({
+        ...t,
+        entryPrice: parseFloat(t.entryPrice?.toString() ?? '0'),
+        exitPrice: t.exitPrice != null ? parseFloat(t.exitPrice?.toString() ?? '0') : null,
+        amount: parseFloat(t.amount?.toString() ?? '0'),
+        profit: parseFloat(t.profit?.toString() ?? '0'),
+        profitPercent: parseFloat(t.profitPercent?.toString() ?? '0'),
+      })),
+      bot: ub.bot ? {
+        ...ub.bot,
+        winRate: parseFloat(ub.bot.winRate?.toString() ?? '0'),
+        avgMonthlyReturn: parseFloat(ub.bot.avgMonthlyReturn?.toString() ?? '0'),
+        minInvestment: parseFloat(ub.bot.minInvestment?.toString() ?? '0'),
+        maxInvestment: parseFloat(ub.bot.maxInvestment?.toString() ?? '0'),
+      } : ub.bot,
+    }));
 
     return NextResponse.json({
       success: true,

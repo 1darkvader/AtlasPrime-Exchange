@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
       where.botId = botId;
     }
 
-    const userBots = await prisma.userBot.findMany({
+    const userBotsRaw = await prisma.userBot.findMany({
       where,
       include: {
         user: {
@@ -57,19 +57,42 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    const userBots = userBotsRaw.map((ub: any) => ({
+      ...ub,
+      investedAmount: parseFloat(ub.investedAmount?.toString() ?? '0'),
+      currentValue: parseFloat(ub.currentValue?.toString() ?? '0'),
+      totalProfit: parseFloat(ub.totalProfit?.toString() ?? '0'),
+      profitPercent: parseFloat(ub.profitPercent?.toString() ?? '0'),
+      trades: (ub.trades ?? []).map((t: any) => ({
+        ...t,
+        entryPrice: parseFloat(t.entryPrice?.toString() ?? '0'),
+        exitPrice: t.exitPrice != null ? parseFloat(t.exitPrice?.toString() ?? '0') : null,
+        amount: parseFloat(t.amount?.toString() ?? '0'),
+        profit: parseFloat(t.profit?.toString() ?? '0'),
+        profitPercent: parseFloat(t.profitPercent?.toString() ?? '0'),
+      })),
+      bot: ub.bot ? {
+        ...ub.bot,
+        winRate: parseFloat(ub.bot.winRate?.toString() ?? '0'),
+        avgMonthlyReturn: parseFloat(ub.bot.avgMonthlyReturn?.toString() ?? '0'),
+        minInvestment: parseFloat(ub.bot.minInvestment?.toString() ?? '0'),
+        maxInvestment: parseFloat(ub.bot.maxInvestment?.toString() ?? '0'),
+      } : ub.bot,
+    }));
+
     // Calculate summary stats
     const totalInvested = userBots.reduce(
-      (sum, bot) => sum + parseFloat(bot.investedAmount.toString()),
+      (sum, bot) => sum + (bot.investedAmount ?? 0),
       0
     );
 
     const totalCurrentValue = userBots.reduce(
-      (sum, bot) => sum + parseFloat(bot.currentValue.toString()),
+      (sum, bot) => sum + (bot.currentValue ?? 0),
       0
     );
 
     const totalProfit = userBots.reduce(
-      (sum, bot) => sum + parseFloat(bot.totalProfit.toString()),
+      (sum, bot) => sum + (bot.totalProfit ?? 0),
       0
     );
 
