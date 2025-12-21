@@ -1,0 +1,48 @@
+$ next dev -H 0.0.0.0 --turbopack
+   ▲ Next.js 15.3.2 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://0.0.0.0:3000
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 973ms
+ ○ Compiling / ...
+ ✓ Compiled / in 10s
+ GET / 200 in 10301ms
+ GET / 200 in 59ms
+ GET / 200 in 48ms
+ GET / 200 in 47ms
+ GET / 200 in 50ms
+ GET / 200 in 43ms
+ GET / 200 in 82ms
+ GET / 200 in 42ms
+ GET / 200 in 50ms
+ GET / 200 in 44ms
+ GET / 200 in 45ms
+ GET / 200 in 43ms
+ GET / 200 in 41ms
+ GET / 200 in 41ms
+ GET / 200 in 41ms
+ GET / 200 in 40ms
+ GET / 200 in 41ms
+ GET / 200 in 43ms
+ GET / 200 in 43ms
+ GET / 200 in 41ms
+ ✓ Compiled in 94ms
+ GET / 200 in 40ms
+ GET / 200 in 41ms
+ GET / 200 in 72ms
+ GET / 200 in 40ms
+ GET / 200 in 43ms
+ GET / 200 in 45ms
+ GET / 200 in 41ms
+ GET / 200 in 40ms
+ GET / 200 in 43ms
+ GET / 200 in 41ms
+ GET / 200 in 41ms
+ GET / 200 in 41ms
+ GET / 200 in 42ms
+ GET / 200 in 41ms
+ GET / 200 in 39ms
+ GET / 200 in 37ms
+ GET / 200 in 99ms

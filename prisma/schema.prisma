@@ -1,0 +1,433 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User account
+model User {
+  id              String    @id @default(cuid())
+  uid             String?   @unique // Unique user ID displayed to users
+  email           String    @unique
+  username        String    @unique
+  passwordHash    String
+  firstName       String?
+  lastName        String?
+  avatar          String?
+  phoneNumber     String?
+  countryCode     String?
+
+  // Role and verification status
+  role            UserRole  @default(USER)
+  emailVerified   Boolean   @default(false)
+  kycStatus       KYCStatus @default(NOT_STARTED)
+  twoFactorEnabled Boolean  @default(false)
+  twoFactorSecret String?
+
+  // Email verification
+  emailVerificationToken       String?
+  emailVerificationTokenExpiry DateTime?
+
+  // Password reset
+  passwordResetToken           String?
+  passwordResetTokenExpiry     DateTime?
+
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  lastLogin       DateTime?
+
+  // Relations
+  wallets         Wallet[]
+  orders          Order[]
+  trades          Trade[]
+  kycDocuments    KYCDocument[]
+  transactions    Transaction[]
+  sessions        Session[]
+  stockPortfolio  StockPortfolio[]
+  stockWatchlist  StockWatchlist[]
+  userBots        UserBot[]
+
+  @@index([email])
+  @@index([username])
+  @@index([uid])
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum KYCStatus {
+  NOT_STARTED
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+// User session management
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  token        String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+// Wallet balances
+model Wallet {
+  id              String   @id @default(cuid())
+  userId          String
+  asset           String   // BTC, ETH, USDT, etc.
+  balance         Decimal  @default(0) @db.Decimal(18, 8)
+  lockedBalance   Decimal  @default(0) @db.Decimal(18, 8) // Balance in open orders
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, asset])
+  @@index([userId])
+}
+
+// Admin/Platform treasury wallet
+model AdminWallet {
+  id              String   @id @default(cuid())
+  asset           String   @unique // BTC, ETH, USDT, etc.
+  balance         Decimal  @default(0) @db.Decimal(18, 8)
+  totalDeposits   Decimal  @default(0) @db.Decimal(18, 8)
+  totalWithdrawals Decimal @default(0) @db.Decimal(18, 8)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([asset])
+}
+
+// Trading orders
+model Order {
+  id              String      @id @default(cuid())
+  userId          String
+  pair            String      // BTCUSDT, ETHUSDT, etc.
+  type            OrderType
+  side            OrderSide
+  price           Decimal?    @db.Decimal(18, 8)
+  amount          Decimal     @db.Decimal(18, 8)
+  filled          Decimal     @default(0) @db.Decimal(18, 8)
+  status          OrderStatus @default(OPEN)
+
+  // Advanced order features
+  stopPrice       Decimal?    @db.Decimal(18, 8)
+  takeProfitPrice Decimal?    @db.Decimal(18, 8)
+  stopLossPrice   Decimal?    @db.Decimal(18, 8)
+
+  // Futures specific
+  leverage        Int?
+  positionMode    String?     // CROSS, ISOLATED
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  completedAt     DateTime?
+
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trades          Trade[]
+
+  @@index([userId])
+  @@index([pair])
+  @@index([status])
+}
+
+enum OrderType {
+  MARKET
+  LIMIT
+  STOP_LIMIT
+  TRAILING_STOP
+  OCO
+}
+
+enum OrderSide {
+  BUY
+  SELL
+  LONG
+  SHORT
+}
+
+enum OrderStatus {
+  OPEN
+  PARTIALLY_FILLED
+  FILLED
+  CANCELLED
+  REJECTED
+}
+
+// Executed trades
+model Trade {
+  id              String   @id @default(cuid())
+  orderId         String
+  userId          String
+  pair            String
+  side            OrderSide
+  price           Decimal  @db.Decimal(18, 8)
+  amount          Decimal  @db.Decimal(18, 8)
+  fee             Decimal  @db.Decimal(18, 8)
+  feeAsset        String   // Asset used for fee (BNB, USDT, etc.)
+
+  createdAt       DateTime @default(now())
+
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([pair])
+  @@index([orderId])
+}
+
+// Transaction history (deposits, withdrawals, transfers)
+model Transaction {
+  id              String            @id @default(cuid())
+  userId          String
+  type            TransactionType
+  asset           String
+  amount          Decimal           @db.Decimal(18, 8)
+  fee             Decimal?          @db.Decimal(18, 8)
+  status          TransactionStatus @default(PENDING)
+
+  // External transaction details
+  txHash          String?           // Blockchain transaction hash
+  address         String?           // Wallet address
+  network         String?           // ETH, BSC, TRC20, etc.
+
+  // User confirmation & admin approval
+  userConfirmed   Boolean           @default(false)
+  adminApproved   Boolean           @default(false)
+  approvedBy      String?           // Admin user ID who approved
+  rejectionReason String?           // Reason if rejected
+  proofUrl        String?           // Screenshot/proof of payment URL
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  completedAt     DateTime?
+  approvedAt      DateTime?
+
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@index([adminApproved])
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  TRANSFER
+}
+
+enum TransactionStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+// KYC documents
+model KYCDocument {
+  id              String         @id @default(cuid())
+  userId          String
+  documentType    DocumentType
+  fileUrl         String         // Cloudinary URL
+  status          KYCDocStatus   @default(PENDING)
+  rejectionReason String?
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  reviewedAt      DateTime?
+
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+}
+
+enum DocumentType {
+  ID_FRONT
+  ID_BACK
+  PASSPORT
+  SELFIE
+  PROOF_OF_ADDRESS
+}
+
+enum KYCDocStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// Stock Portfolio - separate from crypto wallets
+model StockPortfolio {
+  id              String   @id @default(cuid())
+  userId          String
+  symbol          String   // NVDA, MSFT, etc.
+  shares          Decimal  @db.Decimal(18, 8)
+  averagePrice    Decimal  @db.Decimal(18, 2)
+  totalInvested   Decimal  @db.Decimal(18, 2)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, symbol])
+  @@index([userId])
+  @@index([symbol])
+}
+
+// Stock Watchlist
+model StockWatchlist {
+  id              String   @id @default(cuid())
+  userId          String
+  symbol          String   // NVDA, MSFT, etc.
+  alertPrice      Decimal? @db.Decimal(18, 2)
+  notes           String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, symbol])
+  @@index([userId])
+  @@index([symbol])
+}
+
+// Trading Bot Templates - Pre-configured bot strategies
+model TradingBot {
+  id              String   @id @default(cuid())
+  name            String   @unique
+  description     String
+  strategy        String   // Description of the trading strategy
+  riskLevel       RiskLevel
+
+  // Performance metrics (simulated/historical)
+  winRate         Decimal  @db.Decimal(5, 2) // Percentage
+  totalUsers      Int      @default(0)
+  avgMonthlyReturn Decimal @db.Decimal(5, 2) // Percentage
+
+  // Bot configuration
+  minInvestment   Decimal  @db.Decimal(18, 2)
+  maxInvestment   Decimal  @db.Decimal(18, 2)
+  supportedPairs  String[] // Array of supported trading pairs
+
+  // Status
+  isActive        Boolean  @default(true)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  userBots        UserBot[]
+
+  @@index([isActive])
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+// User Bot Instances - User's activated bots
+model UserBot {
+  id              String   @id @default(cuid())
+  userId          String
+  botId           String
+
+  // Investment details
+  investedAmount  Decimal  @db.Decimal(18, 2)
+  currentValue    Decimal  @db.Decimal(18, 2)
+  totalProfit     Decimal  @db.Decimal(18, 2) @default(0)
+  profitPercent   Decimal  @db.Decimal(5, 2) @default(0)
+
+  // Configuration
+  tradingPair     String   // BTCUSDT, ETHUSDT, etc.
+  takeProfitPercent Decimal? @db.Decimal(5, 2)
+  stopLossPercent   Decimal? @db.Decimal(5, 2)
+
+  // Status
+  status          BotStatus @default(ACTIVE)
+  isActive        Boolean   @default(true)
+
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  startedAt       DateTime @default(now())
+  stoppedAt       DateTime?
+
+  // Relations
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bot             TradingBot @relation(fields: [botId], references: [id], onDelete: Cascade)
+  trades          BotTrade[]
+
+  @@index([userId])
+  @@index([botId])
+  @@index([status])
+  @@index([isActive])
+}
+
+enum BotStatus {
+  ACTIVE
+  PAUSED
+  STOPPED
+  COMPLETED
+}
+
+// Bot Trades - Simulated trades executed by bots
+model BotTrade {
+  id              String   @id @default(cuid())
+  userBotId       String
+
+  // Trade details
+  pair            String   // BTCUSDT, ETHUSDT, etc.
+  side            OrderSide // BUY, SELL
+  entryPrice      Decimal  @db.Decimal(18, 8)
+  exitPrice       Decimal? @db.Decimal(18, 8)
+  amount          Decimal  @db.Decimal(18, 8)
+
+  // Profit/Loss
+  profit          Decimal  @db.Decimal(18, 2) @default(0)
+  profitPercent   Decimal  @db.Decimal(5, 2) @default(0)
+
+  // Status
+  status          TradeStatus @default(OPEN)
+
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  closedAt        DateTime?
+
+  // Relations
+  userBot         UserBot  @relation(fields: [userBotId], references: [id], onDelete: Cascade)
+
+  @@index([userBotId])
+  @@index([status])
+  @@index([pair])
+}
+
+enum TradeStatus {
+  OPEN
+  CLOSED
+  CANCELLED
+}
