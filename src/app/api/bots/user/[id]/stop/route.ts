@@ -83,19 +83,25 @@ export async function POST(
       });
 
       // Unlock the invested amount and add current value to balance
-      const usdtWallet = user.wallets.find(w => w.asset === 'USDT');
+      const stableAssets = ['USDT', 'USDC', 'BUSD'] as const;
+      const userStableWallets = user.wallets.filter((w) => stableAssets.includes(w.asset as any));
 
-      if (usdtWallet) {
-        const investedAmount = parseFloat(userBot.investedAmount.toString());
-        const currentValue = parseFloat(userBot.currentValue.toString());
-        const lockedAmount = investedAmount; // Amount that was locked
+      const investedAmount = parseFloat(userBot.investedAmount.toString());
+      const currentValue = parseFloat(userBot.currentValue.toString());
 
+      // Prefer unlocking from USDT, then USDC, then BUSD
+      const preferredOrder = ['USDT', 'USDC', 'BUSD'];
+      const chosenWallet = preferredOrder
+        .map((asset) => userStableWallets.find((w) => w.asset === asset))
+        .find(Boolean) || userStableWallets[0];
+
+      if (chosenWallet) {
         await tx.wallet.update({
-          where: { id: usdtWallet.id },
+          where: { id: chosenWallet.id },
           data: {
             // Unlock the invested amount
             lockedBalance: {
-              decrement: lockedAmount,
+              decrement: investedAmount,
             },
             // Add the current value (invested + profit) to available balance
             balance: {

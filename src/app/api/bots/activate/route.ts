@@ -102,35 +102,52 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check user has enough USDT balance
-    const usdtWallet = user.wallets.find(w => w.asset === 'USDT');
-    const availableBalance = usdtWallet
-      ? parseFloat(usdtWallet.balance.toString()) - parseFloat(usdtWallet.lockedBalance.toString())
-      : 0;
+    // Check user has enough stablecoin balance (USDT/USDC/BUSD)
+    const stableAssets = ['USDT', 'USDC', 'BUSD'] as const;
+    const stableWallets = user.wallets.filter((w) => stableAssets.includes(w.asset as any));
 
-    if (availableBalance < investedAmountNum) {
+    const walletsAvailableMap = stableWallets.map((w) => ({
+      asset: w.asset,
+      available: parseFloat(w.balance.toString()) - parseFloat(w.lockedBalance.toString()),
+      id: w.id,
+    }));
+
+    const totalStableAvailable = walletsAvailableMap.reduce((sum, w) => sum + w.available, 0);
+
+    if (totalStableAvailable < investedAmountNum) {
       return NextResponse.json(
         {
           success: false,
-          message: `Insufficient USDT balance. Required: $${investedAmountNum}, Available: $${availableBalance.toFixed(2)}`,
+          message: `Insufficient stablecoin balance (USDT/USDC/BUSD). Required: $${investedAmountNum}, Available: $${totalStableAvailable.toFixed(2)}`,
         },
         { status: 400 }
       );
     }
 
-    // Create user bot and lock funds in transaction
+    // Choose the wallet to lock from: prefer USDT, then USDC, then BUSD
+    const preferredOrder = ['USDT', 'USDC', 'BUSD'];
+    const chosenWallet = preferredOrder
+      .map((asset) => walletsAvailableMap.find((w) => w.asset === asset && w.available >= investedAmountNum))
+      .find(Boolean) || walletsAvailableMap.find((w) => w.available >= investedAmountNum);
+
+    if (!chosenWallet) {
+      return NextResponse.json(
+        { success: false, message: 'Unable to allocate funds from stablecoin wallets.' },
+        { status: 400 }
+      );
+    }
+
+    // Create user bot and lock funds in transaction from chosen asset
     const userBot = await prisma.$transaction(async (tx) => {
-      // Lock the invested amount
-      if (usdtWallet) {
-        await tx.wallet.update({
-          where: { id: usdtWallet.id },
-          data: {
-            lockedBalance: {
-              increment: investedAmountNum,
-            },
+      // Lock the invested amount in the chosen stablecoin wallet
+      await tx.wallet.update({
+        where: { id: chosenWallet.id },
+        data: {
+          lockedBalance: {
+            increment: investedAmountNum,
           },
-        });
-      }
+        },
+      });
 
       // Create user bot
       const newUserBot = await tx.userBot.create({
@@ -165,7 +182,7 @@ export async function POST(request: NextRequest) {
       return newUserBot;
     });
 
-    console.log(`✅ Bot activated: ${bot.name} for user ${user.username}, amount: $${investedAmountNum}`);
+    console.log(`✅ Bot activated: ${bot.name} for user ${user.username}, amount: $${investedAmountNum} from ${chosenWallet.asset}`);
 
     return NextResponse.json({
       success: true,
